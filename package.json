@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/amygtownsend/marvel-data/issues"
   },
-  "homepage": "https://github.com/amygtownsend/marvel-data#readme"
+  "homepage": "https://github.com/amygtownsend/marvel-data#readme",
+  "devDependencies": {
+    "express": "^4.16.4"
+  }
 }
