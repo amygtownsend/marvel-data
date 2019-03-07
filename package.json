@@ -19,5 +19,8 @@
   "homepage": "https://github.com/amygtownsend/marvel-data#readme",
   "devDependencies": {
     "express": "^4.16.4"
+  },
+  "dependencies": {
+    "dotenv": "^6.2.0"
   }
 }
