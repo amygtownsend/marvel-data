@@ -53,6 +53,7 @@ section {
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+  width: 100%;
 }
 
 button {
@@ -83,13 +84,13 @@ p {
   transition: opacity .3s, background-color .3s;
 }
 
-#panel1__content, #panel2__content {
+.panel__cards {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  margin-top: 25px;
   padding: 0 25px;
+  margin: 25px auto 0;
 }
 
 .panel__card {
@@ -113,6 +114,10 @@ p {
   background-color: rgb(237, 29, 36);
 }
 
+#panel3 .panel__content {
+  width: auto;
+}
+
 .panel__card img {
   display: block;
   width: 100%;
@@ -134,7 +139,7 @@ p {
 }
 
 @media only screen and (min-width: 768px) {
-  #panel1__content, #panel2__content {
+  .panel__cards {
     max-width: 70vw;
   }
 

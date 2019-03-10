@@ -85,8 +85,8 @@ let init = function () {
 
       console.log("team", teamData);
 
-      let panel1Content = document.getElementById("panel1__content");
-      let panel2Content = document.getElementById("panel2__content");
+      let panel1Cards = document.getElementById("panel1__cards");
+      let panel2Cards = document.getElementById("panel2__cards");
 
       function cards(array, id, shape, size) {
         array.forEach((item) => {
@@ -112,8 +112,8 @@ let init = function () {
         });
       }
 
-      cards(mainData, panel1Content, 'landscape', 'xlarge');
-      cards(teamData, panel2Content, 'portrait', 'uncanny');
+      cards(mainData, panel1Cards, 'landscape', 'xlarge');
+      cards(teamData, panel2Cards, 'portrait', 'uncanny');
 
 
       // CHART.JS
@@ -173,8 +173,8 @@ let init = function () {
       });
 
       let ctx = document.getElementById("chart").getContext('2d');
-      Chart.defaults.global.elements.point.radius = 5;
-      Chart.defaults.global.elements.point.hoverRadius = 6;
+      Chart.defaults.global.elements.point.radius = 3;
+      Chart.defaults.global.elements.point.hoverRadius = 4;
       Chart.defaults.global.defaultFontFamily = "'Overpass', sans-serif";
       Chart.defaults.global.defaultFontColor = '#22262a';
       var scatterChart = new Chart(ctx, {
