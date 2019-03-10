@@ -22,13 +22,13 @@ let init = function () {
   slides.forEach((slide) => {
     new ScrollMagic.Scene({
       triggerElement: slide,
-      duration: "150%"
+      duration: "100%"
     })
       .setPin(slide)
       .addTo(controller);
   });
 
-  // CHART.JS
+  // Fetch data from Marvel API
 
   setTimeout(function () {
     fetch('/character').then(resp => resp.json()).then((data) => {
@@ -36,13 +36,87 @@ let init = function () {
 
       let comicsAll = [];
       let eventsAll = [];
+      let mainData = [];
+      let teamData = [];
+      let main = [
+        { name: 'Spider-Man', id: '1009610' },
+        { name: 'Wolverine', id: '1009718' },
+        { name: 'Iron-man', id: '1009368' },
+        { name: 'Captain America', id: '1009220' },
+        { name: 'Thor', id: '1009664' },
+        { name: 'Hulk', id: '1009351' }
+      ];
 
+      let teams = [
+        { name: 'Avengers', id: '1009165' },
+        { name: 'X-men', id: '1009726' },
+        { name: 'Fantastic Four', id: '1009299' }
+      ];
+
+      // Create arrays with all character data
       data.forEach((group) => {
         group.forEach((character) => {
           comicsAll.push(character);
           eventsAll.push(character);
         });
       });
+
+      // Filter data by selected character ids
+      function filter(array) {
+        let filteredData = [];
+        for (let i = 0; i < array.length; i++) {
+          data.forEach((group) => {
+            group.forEach((character) => {
+              if (character.id == array[i].id) {
+                filteredData.push(character);
+              }
+            });
+          });
+        }
+        return filteredData;
+      }
+
+      mainData = filter(main);
+      teamData = filter(teams);
+
+      // Alphabetically order data using character names
+      mainData.sort(names);
+      teamData.sort(names);
+
+      console.log("team", teamData);
+
+      let panel1Content = document.getElementById("panel1__content");
+      let panel2Content = document.getElementById("panel2__content");
+
+      function cards(array, id, shape, size) {
+        array.forEach((item) => {
+          let div = document.createElement("div");
+          let divClass = document.createAttribute("class");
+          divClass.value = "panel__card";
+          div.setAttributeNode(divClass);
+          let img = document.createElement("img");
+          let src = document.createAttribute("src");
+          src.value = `${item.thumbnail.path}/${shape}_${size}.${item.thumbnail.extension}`;
+          img.setAttributeNode(src);
+          let h2 = document.createElement("h2");
+          h2.innerText = item.name;
+          let p = document.createElement("p");
+          let pClass = document.createAttribute("class");
+          pClass.value = "hidden";
+          p.innerText = item.description;
+          p.setAttributeNode(pClass);
+          div.appendChild(img);
+          div.appendChild(h2);
+          div.appendChild(p);
+          id.appendChild(div);
+        });
+      }
+
+      cards(mainData, panel1Content, 'landscape', 'xlarge');
+      cards(teamData, panel2Content, 'portrait', 'uncanny');
+
+
+      // CHART.JS
 
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
       function names(a, b) {
@@ -65,14 +139,14 @@ let init = function () {
         return b.events.available - a.events.available;
       }
 
-      comicsAll.sort(comics);
-      eventsAll.sort(events);
+      comicsAll.sort(comics); // Sort characters by highest number of comics
+      eventsAll.sort(events); // Sort characters by highest number of events
 
-      let comicsShort = comicsAll.slice(0, 30);
-      let eventsShort = eventsAll.slice(0, 30);
+      let comicsShort = comicsAll.slice(0, 30); // 30 characters with the most comics
+      let eventsShort = eventsAll.slice(0, 30); // 30 characters with the most events
 
       // https://stackoverflow.com/questions/1584370/how-to-merge-two-arrays-in-javascript-and-de-duplicate-items
-      function arrayUnique(array) {
+      function removeDuplicates(array) {
         var a = array.concat();
         for (var i = 0; i < a.length; ++i) {
           for (var j = i + 1; j < a.length; ++j) {
@@ -85,8 +159,8 @@ let init = function () {
         return a;
       }
 
-      // Merges both arrays and gets unique items
-      let joined = arrayUnique(comicsShort.concat(eventsShort));
+      // Merge comicsShort and eventsShort arrays with duplicates removed
+      let joined = removeDuplicates(comicsShort.concat(eventsShort));
       let scatterCharacters = joined.sort(names);
       console.log(scatterCharacters);
 
@@ -123,7 +197,7 @@ let init = function () {
           title: {
             display: true,
             fontSize: '16',
-            text: 'Marvel Characters: Comics and Events'
+            text: '36 Most Common Marvel Characters'
           },
           scales: {
             xAxes: [{
@@ -151,7 +225,7 @@ let init = function () {
             callbacks: {
               label: function (tooltipItem, data) {
                 var label = data.labels[tooltipItem.index];
-                return label + ': (' + tooltipItem.xLabel + ' comics, ' + tooltipItem.yLabel + ' events)';
+                return label + ': (' + tooltipItem.xLabel + ' events, ' + tooltipItem.yLabel + ' comics)';
               }
             }
           }
